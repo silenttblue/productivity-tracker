@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Todo App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>My Todo List</h1>
+        
+        <!-- Input section -->
+        <div class="input-section">
+            <input type="text" id="taskInput" placeholder="Enter a new task...">
+            <button id="addTaskBtn">Add Task</button>
+        </div>
+
+        <!-- Where tasks will appear -->
+        <ul id="taskList"></ul>
+        <p id="message"></p>
+    </div>
+    <div id="undoPopup">completed  <button id="undoBtn">Undo</button> </div>
+    <div id="appreciationPopup" style="display: none;">💅 No cap, you slayyed!</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
