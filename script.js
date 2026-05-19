@@ -100,7 +100,7 @@ function displayTasks() { //whenevr i call this func it will refresh the task li
     }
 
     checkAllTasksCompleted();
-} // ✅ BUG 2 FIX: displayTasks properly closes here, nothing leaks outside
+} 
 
 function checkAllTasksCompleted() {
     if (tasks.length > 0 && tasks.every(task => task.completed)) {
