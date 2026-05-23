@@ -46,6 +46,7 @@ button {
     border: 1px solid black;
     cursor: pointer;
     font-family: 'Fredoka', 'Poppins', sans-serif;
+    margin-top: 8px;
 }
 
 ul {
@@ -91,6 +92,23 @@ li::before {
   color: gray;
   opacity: 0.6;
   transition: opacity 0.5s ease;
+}
+
+/* due date badge — the small colored tag next to task name */
+.due-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 20px; /* makes it pill shaped */
+    background-color: #d4edda; /* soft green background */
+    color: #2d6a4f; /* dark green text */
+    font-weight: 600;
+    white-space: nowrap; /* stops badge text from breaking into 2 lines */
+    margin-left: auto; /* pushes badge to the right side of the task */
+}
+/* overdue badge — red version shown when deadline has passed */
+.due-badge.overdue {
+    background-color: #f8d7da; /* soft red background */
+    color: #842029; /* dark red text */
 }
 
 #undoPopup{
