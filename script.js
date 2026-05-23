@@ -1,5 +1,6 @@
 // Get HTML elements
 const taskInput = document.getElementById("taskInput");
+const dueDateInput = document.getElementById("dueDateInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
 const taskList = document.getElementById("taskList");
 const undoPopup = document.getElementById("undoPopup");
@@ -20,18 +21,47 @@ function saveTasks() {
 function addTask() {
     const taskText = taskInput.value.trim(); //get wht user type remove xtra space
     if (taskText == "") return;  //if input box empty do nothing just return
-    tasks.push({ text: taskText, completed: false, createdAt: new Date().toISOString() }); //add new element at end on array
-    saveTasks();
+    const dueDate = dueDateInput.value; // get whatever date user picked, will be "" if not picked
+    tasks.push({ 
+        text: taskText, 
+        completed: false, 
+        createdAt: new Date().toISOString(),  //add new element at end on array
+        dueDate: dueDate  // saves the picked date with the task object
+        });
+        saveTasks();
     taskInput.value = ""; //clear box after add
     displayTasks(); //refresh screen
 }
-
-
+function formatDate(dateString) {
+    const date = new Date(dateString + "T00:00:00");
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+// createTaskElement now exists as a proper named function
 // whatever code inside this func will run for each element in the list or array
 function createTaskElement(task, index) {
     const li = document.createElement("li"); // create new <li> element in HTML element in memory
-    li.textContent = task.text; //  show task name inside bullet points  // set its text
+    //li.textContent = task.text; //  show task name inside bullet points  // set its text
     li.dataset.index = index;  //store its position in an array
+    // task text span (so badge sits next to it neatly)
+    const taskTextSpan = document.createElement("span");
+     taskTextSpan.textContent = task.text;
+    li.appendChild(taskTextSpan); // put text inside li first
+    // due date badge
+    if (task.dueDate) { // only show badge if user picked a date
+        const badge = document.createElement("span");
+        badge.classList.add("due-badge");
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // midnight so only date is compared
+        const due = new Date(task.dueDate);
+
+        if (!task.completed && due < today) {
+            badge.classList.add("overdue");
+            badge.textContent = "⚠️ Overdue: " + formatDate(task.dueDate);
+        } else {
+            badge.textContent = "📅 " + formatDate(task.dueDate);
+        }
+        li.appendChild(badge); // put badge inside li next to text
+    }
     // Show completed tasks with the completed class
     if (task.completed) {
         li.classList.add("completed");
@@ -70,7 +100,7 @@ function displayTasks() { //whenevr i call this func it will refresh the task li
     const yesterday = yesterdayDate.toDateString();
 
     let todayTasks = [];
-    let yesterdayTasks = [];  
+    let yesterdayTasks = []; // added = [] 
     //separate tasks
     tasks.forEach(task => {
         const taskDate = new Date(task.createdAt).toDateString();
@@ -86,7 +116,7 @@ function displayTasks() { //whenevr i call this func it will refresh the task li
         todayHeading.textContent = "Today";
         taskList.appendChild(todayHeading);
         todayTasks.forEach((task, index) => {
-            createTaskElement(task, tasks.indexOf(task)); 
+            createTaskElement(task, tasks.indexOf(task)); // now inside displayTasks + using correct index
         });
     }
     // Show Yesterday Section
@@ -100,7 +130,7 @@ function displayTasks() { //whenevr i call this func it will refresh the task li
     }
 
     checkAllTasksCompleted();
-} 
+} // displayTasks properly closes here, nothing leaks outside
 
 function checkAllTasksCompleted() {
     if (tasks.length > 0 && tasks.every(task => task.completed)) {
@@ -132,4 +162,4 @@ taskInput.addEventListener("keydown", function (e) {
     }
 });
 
-displayTasks();*/
+displayTasks();
