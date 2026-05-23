@@ -1,3 +1,1 @@
-const → for values that won’t be reassigned (like the HTML elements — they won’t change).
-let → for values that will change (like your tasks array — you’ll keep adding/removing items).
-const elementName = document.getElementById("elementID");
+
