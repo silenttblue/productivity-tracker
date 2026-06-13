@@ -10,15 +10,33 @@
 <body>
     <div class="container">
         <h1>My Todo List</h1>
+        <button id="darkModeBtn">🌙 Dark</button>
         
-       
+        
         <div class="input-section">
             <input type="text" id="taskInput" placeholder="Enter a new task...">
             <input type="date" id="dueDateInput">
            
             <button id="addTaskBtn">Add Task</button>
         </div>
-
+       
+<div class="search-section">
+    <input type="text" id="searchInput" placeholder="Search tasks...">
+</div>
+<div class="filter-bar">
+    <div class="filter-group">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="high">🔴 High</button>
+        <button class="filter-btn" data-filter="medium">🟡 Medium</button>
+        <button class="filter-btn" data-filter="low">🟢 Low</button>
+        <button class="filter-btn" data-filter="completed">✅ Done</button>
+    </div>
+    <select id="sortSelect">
+        <option value="default">Sort: Default</option>
+        <option value="priority">Sort: Priority</option>
+        <option value="dueDate">Sort: Due Date</option>
+    </select>
+</div>
        
         <ul id="taskList"></ul>
         <p id="message"></p>
