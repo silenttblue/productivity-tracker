@@ -680,3 +680,14 @@ body.dark-mode #undoPopup button {
     background: var(--accent);
     color: white; 
 }
+body.dark-mode .priority-high {
+    border-left: 4px solid #ff6b6b; 
+}
+
+body.dark-mode .priority-medium {
+    border-left: 4px solid #ffc145; 
+}
+
+body.dark-mode .priority-low {
+    border-left: 4px solid #5ddb8f; 
+}
