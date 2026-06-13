@@ -1,12 +1,22 @@
+if (localStorage.getItem("darkMode") === "enabled") {
+    document.body.classList.add("dark-mode");
+    document.getElementById("darkModeBtn").textContent = "☀️ Light";
+}
+
 const taskInput = document.getElementById("taskInput");
 const dueDateInput = document.getElementById("dueDateInput");
+const darkModeBtn = document.getElementById("darkModeBtn");
 const addTaskBtn = document.getElementById("addTaskBtn");
 const taskList = document.getElementById("taskList");
 const undoPopup = document.getElementById("undoPopup");
 const undoBtn = document.getElementById("undoBtn");
 const message = document.getElementById("message");
 const appreciationPopup = document.getElementById("appreciationPopup");
+const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
 
+let currentFilter = "all";
+let currentSort = "default";
 let lastRemovedTask = null;
 let undoTimeout;
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -189,10 +199,20 @@ function displayTasks() {
     const yesterdayDate = new Date();
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     const yesterday = yesterdayDate.toDateString();
+    const filtered = getFilteredAndSortedTasks();
+
+    if (currentSort !== "default") {
+        filtered.forEach(task => {
+            createTaskElement(task, tasks.indexOf(task));
+        });
+        checkAllTasksCompleted();
+        return;
+    }
+
     let todayTasks = [];
     let yesterdayTasks = [];
 
-    tasks.forEach(task => {
+    filtered.forEach(task => {
         const taskDate = new Date(task.createdAt).toDateString();
         if (taskDate === today) {
             todayTasks.push(task);
@@ -205,7 +225,7 @@ function displayTasks() {
         const todayHeading = document.createElement("h3");
         todayHeading.textContent = "Today";
         taskList.appendChild(todayHeading);
-        todayTasks.forEach((task) => {
+        todayTasks.forEach(task => {
             createTaskElement(task, tasks.indexOf(task));
         });
     }
@@ -214,7 +234,7 @@ function displayTasks() {
         const yesterdayHeading = document.createElement("h3");
         yesterdayHeading.textContent = "Yesterday";
         taskList.appendChild(yesterdayHeading);
-        yesterdayTasks.forEach((task) => {
+        yesterdayTasks.forEach(task => {
             createTaskElement(task, tasks.indexOf(task));
         });
     }
@@ -231,6 +251,63 @@ function checkAllTasksCompleted() {
     }
 }
 
+function filterTasks(query) {
+    const q = query.toLowerCase().trim();
+    if (q === "") {
+        displayTasks();
+        return;
+    }
+    taskList.innerHTML = "";
+    const results = tasks.filter(task =>
+        task.text.toLowerCase().includes(q)
+    );
+    if (results.length === 0) {
+        const empty = document.createElement("p");
+        empty.textContent = "No tasks found.";
+        empty.style.cssText = "text-align:center; color:#9b8b84; padding: 20px; font-size:14px;";
+        taskList.appendChild(empty);
+        return;
+    }
+    results.forEach(task => {
+        createTaskElement(task, tasks.indexOf(task));
+    });
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("darkMode", "enabled");
+        darkModeBtn.textContent = "☀️ Light";
+    } else {
+        localStorage.removeItem("darkMode");
+        darkModeBtn.textContent = "🌙 Dark";
+    }
+}
+
+function getFilteredAndSortedTasks() {
+    let result = [...tasks];
+    if (currentFilter === "completed") {
+        result = result.filter(task => task.completed);
+    } else if (currentFilter === "high") {
+        result = result.filter(task => task.priority === "high");
+    } else if (currentFilter === "medium") {
+        result = result.filter(task => task.priority === "medium");
+    } else if (currentFilter === "low") {
+        result = result.filter(task => task.priority === "low");
+    }
+    if (currentSort === "priority") {
+        const order = { high: 1, medium: 2, low: 3 };
+        result.sort((a, b) => order[a.priority] - order[b.priority]);
+    } else if (currentSort === "dueDate") {
+        result.sort((a, b) => {
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return new Date(a.dueDate) - new Date(b.dueDate);
+        });
+    }
+    return result;
+}
+
 undoBtn.addEventListener("click", () => {
     clearTimeout(undoTimeout);
     if (lastRemovedTask) {
@@ -245,15 +322,33 @@ undoBtn.addEventListener("click", () => {
 addTaskBtn.addEventListener("click", addTask);
 
 taskInput.addEventListener("keydown", function(e) {
-    if (e.key == "Enter") {
-        addTaskBtn.click();
-    }
+    if (e.key == "Enter") addTaskBtn.click();
 });
 
 document.addEventListener("click", function(e) {
     if (!e.target.closest(".task-menu") && !e.target.closest(".menu-btn")) {
         document.querySelectorAll(".task-menu.show").forEach(m => m.classList.remove("show"));
     }
+});
+
+searchInput.addEventListener("input", function() {
+    filterTasks(searchInput.value);
+});
+
+darkModeBtn.addEventListener("click", toggleDarkMode);
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        currentFilter = this.dataset.filter;
+        displayTasks();
+    });
+});
+
+sortSelect.addEventListener("change", function() {
+    currentSort = this.value;
+    displayTasks();
 });
 
 displayTasks();
