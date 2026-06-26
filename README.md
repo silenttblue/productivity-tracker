@@ -2,6 +2,7 @@
 
 A browser-based productivity application for managing daily tasks with priority tracking, due date management and persistent local storage — built entirely without frameworks or libraries.
 ## Features
+- Welcome Page — personalized greeting based on time of day
 - Add Tasks — quickly add tasks with a due date
 - Due Dates — set deadlines with a date picker; overdue tasks are highlighted in red
 - Priority Levels — mark tasks as High, Medium, or Low priority with color-coded borders
@@ -9,6 +10,9 @@ A browser-based productivity application for managing daily tasks with priority 
 - Live Search — search through tasks instantly as you type
 - Filter & Sort — filter by priority or completion status; sort by due date or priority
 - Dark Mode — toggle between light and dark theme; preference saved across sessions
+- Progress Bar — tracks how many tasks are completed out of total
+- Statistics Page — view total tasks, completed tasks, completion rate and today's progress
+- Drag & Drop — reorder tasks by dragging them up or down
 - Undo — 2.5 second window to undo a completed task
 - Today / Yesterday — tasks are automatically grouped by date
 - Persistent Storage — all data saved in localStorage, survives page refresh
@@ -16,19 +20,22 @@ A browser-based productivity application for managing daily tasks with priority 
 
 ## Tech Stack
 
-- HTML5 Structure
-- CSS3  Styling & animations
-- Vanilla JavaScript  Logic & DOM manipulation
-- localStorage API  Data persistence
-- Google Fonts  Typography 
+- HTML5 - Structure
+- CSS3 - Styling & animations
+- Vanilla JavaScript - Logic & DOM manipulation
+- localStorage API - Data persistence
+- Google Fonts - Typography 
 
 ## Coming Soon
 
-- Drag and drop reordering
-- Progress bar
-- Task statistics
 - Subtasks
 
 ## How to Run
 
 Just open `index.html` in your browser — no setup needed!
+
+Or clone the repository:
+
+git clone https://github.com/silenttblue/productivity-tracker
+
+
