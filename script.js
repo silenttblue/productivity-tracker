@@ -3,6 +3,9 @@ if (localStorage.getItem("darkMode") === "enabled") {
     document.getElementById("darkModeBtn").textContent = "☀️ Light";
 }
 
+const progressFill = document.getElementById("progressFill");
+const progressText = document.getElementById("progressText");
+const progressPercent = document.getElementById("progressPercent");
 const taskInput = document.getElementById("taskInput");
 const dueDateInput = document.getElementById("dueDateInput");
 const darkModeBtn = document.getElementById("darkModeBtn");
@@ -14,12 +17,21 @@ const message = document.getElementById("message");
 const appreciationPopup = document.getElementById("appreciationPopup");
 const searchInput = document.getElementById("searchInput");
 const sortSelect = document.getElementById("sortSelect");
+const welcomePage = document.getElementById("welcomePage");
+const todoPage = document.getElementById("todoPage");
+const statsPage = document.getElementById("statsPage");
+const nameInput = document.getElementById("nameInput");
+const getStartedBtn = document.getElementById("getStartedBtn");
+const statsBtn = document.getElementById("statsBtn");
+const backBtn = document.getElementById("backBtn");
 
 let currentFilter = "all";
 let currentSort = "default";
 let lastRemovedTask = null;
 let undoTimeout;
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let draggedTask = null;
+let draggedEl = null;
 
 function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -46,8 +58,43 @@ function formatDate(dateString) {
     return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
+function addDragAndDrop(li, task) {
+    li.draggable = true;
+
+    li.addEventListener("dragstart", function() {
+        li.classList.add("dragging");
+        setTimeout(() => li.classList.add("dragging"), 0);
+        draggedTask = task;
+        draggedEl = li;
+    });
+
+    li.addEventListener("dragend", function() {
+        li.classList.remove("dragging");
+        document.querySelectorAll("li").forEach(el => el.classList.remove("drag-over"));
+    });
+
+    li.addEventListener("dragover", function(e) {
+        e.preventDefault();
+        document.querySelectorAll("li").forEach(el => el.classList.remove("drag-over"));
+        li.classList.add("drag-over");
+    });
+
+    li.addEventListener("drop", function(e) {
+        e.preventDefault();
+        li.classList.remove("drag-over");
+        if (draggedTask === task) return;
+        const oldIndex = tasks.indexOf(draggedTask);
+        const newIndex = tasks.indexOf(task);
+        tasks.splice(oldIndex, 1);
+        tasks.splice(newIndex, 0, draggedTask);
+        saveTasks();
+        displayTasks();
+    });
+}
+
 function createTaskElement(task, index) {
     const li = document.createElement("li");
+    addDragAndDrop(li, task);
 
     if (task.priority === "high") {
         li.classList.add("priority-high");
@@ -193,6 +240,15 @@ function createTaskElement(task, index) {
     taskList.appendChild(li);
 }
 
+function updateProgress() {
+    const total = tasks.length;
+    const completed = tasks.filter(task => task.completed).length;
+    const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
+    progressFill.style.width = percentage + "%";
+    progressText.textContent = completed + " of " + total + " tasks done";
+    progressPercent.textContent = percentage + "%";
+}
+
 function displayTasks() {
     taskList.innerHTML = "";
     const today = new Date().toDateString();
@@ -205,6 +261,7 @@ function displayTasks() {
         filtered.forEach(task => {
             createTaskElement(task, tasks.indexOf(task));
         });
+        updateProgress();
         checkAllTasksCompleted();
         return;
     }
@@ -239,6 +296,7 @@ function displayTasks() {
         });
     }
 
+    updateProgress();
     checkAllTasksCompleted();
 }
 
@@ -308,6 +366,48 @@ function getFilteredAndSortedTasks() {
     return result;
 }
 
+function initApp() {
+    const savedName = localStorage.getItem("userName");
+    if (savedName) {
+        showPage("todo");
+        greetUser(savedName);
+        displayTasks();
+    } else {
+        showPage("welcome");
+    }
+}
+
+function showPage(page) {
+    welcomePage.style.display = "none";
+    todoPage.style.display = "none";
+    statsPage.style.display = "none";
+    if (page === "welcome") welcomePage.style.display = "flex";
+    if (page === "todo") todoPage.style.display = "flex";
+    if (page === "stats") statsPage.style.display = "flex";
+}
+
+function greetUser(name) {
+    const hour = new Date().getHours();
+    let greeting = "Good morning";
+    if (hour >= 12 && hour < 17) greeting = "Good afternoon";
+    if (hour >= 17) greeting = "Good evening";
+    document.querySelector("#todoPage h1").textContent = greeting + ", " + name + "!";
+}
+
+function updateStats() {
+    const total = tasks.length;
+    const completed = tasks.filter(task => task.completed).length;
+    const rate = total === 0 ? 0 : Math.round((completed / total) * 100);
+    const today = new Date().toDateString();
+    const todayCompleted = tasks.filter(task =>
+        task.completed && new Date(task.createdAt).toDateString() === today
+    ).length;
+    document.getElementById("statTotal").textContent = total;
+    document.getElementById("statCompleted").textContent = completed;
+    document.getElementById("statRate").textContent = rate + "%";
+    document.getElementById("statToday").textContent = todayCompleted;
+}
+
 undoBtn.addEventListener("click", () => {
     clearTimeout(undoTimeout);
     if (lastRemovedTask) {
@@ -351,4 +451,26 @@ sortSelect.addEventListener("change", function() {
     displayTasks();
 });
 
-displayTasks();
+getStartedBtn.addEventListener("click", function() {
+    const name = nameInput.value.trim();
+    if (name === "") return;
+    localStorage.setItem("userName", name);
+    showPage("todo");
+    greetUser(name);
+    displayTasks();
+});
+
+nameInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") getStartedBtn.click();
+});
+
+statsBtn.addEventListener("click", function() {
+    updateStats();
+    showPage("stats");
+});
+
+backBtn.addEventListener("click", function() {
+    showPage("todo");
+});
+
+initApp();
