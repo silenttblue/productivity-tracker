@@ -4,45 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Todo App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Handlee&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>My Todo List</h1>
-        <button id="darkModeBtn">🌙 Dark</button>
-        
-        
-        <div class="input-section">
-            <input type="text" id="taskInput" placeholder="Enter a new task...">
-            <input type="date" id="dueDateInput">
-           
-            <button id="addTaskBtn">Add Task</button>
+
+   
+    <div class="page" id="welcomePage">
+        <div class="welcome-card">
+            <div class="welcome-emoji"></div>
+            <h1 class="welcome-title">Welcome Back</h1>
+            <p class="welcome-quote">"Small steps every day lead to big changes."</p>
+            <div class="welcome-input-group">
+                <label class="welcome-label">What's your name?</label>
+                <input type="text" id="nameInput" placeholder="Enter your name..." class="welcome-input">
+            </div>
+            <button id="getStartedBtn" class="welcome-btn">Let's Go! →</button>
         </div>
-       
-<div class="search-section">
-    <input type="text" id="searchInput" placeholder="Search tasks...">
-</div>
-<div class="filter-bar">
-    <div class="filter-group">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="high">🔴 High</button>
-        <button class="filter-btn" data-filter="medium">🟡 Medium</button>
-        <button class="filter-btn" data-filter="low">🟢 Low</button>
-        <button class="filter-btn" data-filter="completed">✅ Done</button>
     </div>
-    <select id="sortSelect">
-        <option value="default">Sort: Default</option>
-        <option value="priority">Sort: Priority</option>
-        <option value="dueDate">Sort: Due Date</option>
-    </select>
-</div>
-       
-        <ul id="taskList"></ul>
-        <p id="message"></p>
+
+    
+    <div class="page" id="todoPage" style="display:none;">
+        <div class="container">
+            <h1>My Todo List</h1>
+            <button id="darkModeBtn">🌙 Dark</button>
+            <button id="statsBtn" class="stats-btn">📊 Stats</button>
+
+            <div class="input-section">
+                <div class="input-row">
+                    <input type="text" id="taskInput" placeholder="Enter a new task...">
+                </div>
+                <div class="meta-row">
+                    <input type="date" id="dueDateInput">
+                    <button id="addTaskBtn">Add Task</button>
+                </div>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="Search tasks...">
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span id="progressText">0 of 0 tasks done</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="high">🔴 High</button>
+                    <button class="filter-btn" data-filter="medium">🟡 Medium</button>
+                    <button class="filter-btn" data-filter="low">🟢 Low</button>
+                    <button class="filter-btn" data-filter="completed">✅ Done</button>
+                </div>
+                <select id="sortSelect">
+                    <option value="default">Sort: Default</option>
+                    <option value="priority">Sort: Priority</option>
+                    <option value="dueDate">Sort: Due Date</option>
+                </select>
+            </div>
+
+            <ul id="taskList"></ul>
+            <p id="message"></p>
+        </div>
     </div>
-    <div id="undoPopup">completed  <button id="undoBtn">Undo</button> </div>
-    <div id="appreciationPopup" style="display: none;">🏁 List cleared. Not everyone does that.</div>
+
+   
+    <div class="page" id="statsPage" style="display:none;">
+        <div class="container">
+            <button id="backBtn" class="back-btn">← Back</button>
+            <h1>My Statistics</h1>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="statTotal">0</span>
+                    <span class="stat-label">Total Tasks</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statCompleted">0</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statRate">0%</span>
+                    <span class="stat-label">Completion Rate</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statToday">0</span>
+                    <span class="stat-label">Done Today</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="undoPopup">Task completed <button id="undoBtn">Undo</button></div>
+    <div id="appreciationPopup" style="display:none;">🏁 List cleared. Not everyone does that.</div>
+
     <script src="script.js"></script>
 </body>
 </html>
