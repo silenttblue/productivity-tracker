@@ -9,39 +9,41 @@
 </head>
 <body>
 
-   
+    
     <div class="page" id="welcomePage">
         <div class="welcome-card">
-            <div class="welcome-emoji"></div>
+            <div class="welcome-emoji" aria-hidden="true">✦</div>
             <h1 class="welcome-title">Welcome Back</h1>
             <p class="welcome-quote">"Small steps every day lead to big changes."</p>
             <div class="welcome-input-group">
-                <label class="welcome-label">What's your name?</label>
-                <input type="text" id="nameInput" placeholder="Enter your name..." class="welcome-input">
+                <label class="welcome-label" for="nameInput">What's your name?</label>
+                <input type="text" id="nameInput" placeholder="Enter your name..." class="welcome-input" autocomplete="name">
             </div>
-            <button id="getStartedBtn" class="welcome-btn">Let's Go! →</button>
+            <button type="button" id="getStartedBtn" class="welcome-btn">Let's Go! →</button>
         </div>
     </div>
 
-    
-    <div class="page" id="todoPage" style="display:none;">
+   
+    <div class="page" id="todoPage" hidden>
         <div class="container">
-            <h1>My Todo List</h1>
-            <button id="darkModeBtn">🌙 Dark</button>
-            <button id="statsBtn" class="stats-btn">📊 Stats</button>
+            <header class="app-header">
+                <button type="button" id="statsBtn" class="stats-btn">📊 Stats</button>
+                <h1>My Todo List</h1>
+                <button type="button" id="darkModeBtn">🌙 Dark</button>
+            </header>
 
             <div class="input-section">
                 <div class="input-row">
-                    <input type="text" id="taskInput" placeholder="Enter a new task...">
+                    <input type="text" id="taskInput" placeholder="Enter a new task..." maxlength="200">
                 </div>
                 <div class="meta-row">
-                    <input type="date" id="dueDateInput">
-                    <button id="addTaskBtn">Add Task</button>
+                    <input type="date" id="dueDateInput" aria-label="Due date">
+                    <button type="button" id="addTaskBtn">Add Task</button>
                 </div>
             </div>
 
             <div class="search-section">
-                <input type="text" id="searchInput" placeholder="Search tasks...">
+                <input type="text" id="searchInput" placeholder="Search tasks..." aria-label="Search tasks">
             </div>
 
             <div class="progress-section">
@@ -56,13 +58,13 @@
 
             <div class="filter-bar">
                 <div class="filter-group">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="high">🔴 High</button>
-                    <button class="filter-btn" data-filter="medium">🟡 Medium</button>
-                    <button class="filter-btn" data-filter="low">🟢 Low</button>
-                    <button class="filter-btn" data-filter="completed">✅ Done</button>
+                    <button type="button" class="filter-btn active" data-filter="all">All</button>
+                    <button type="button" class="filter-btn" data-filter="high">🔴 High</button>
+                    <button type="button" class="filter-btn" data-filter="medium">🟡 Medium</button>
+                    <button type="button" class="filter-btn" data-filter="low">🟢 Low</button>
+                    <button type="button" class="filter-btn" data-filter="completed">✅ Done</button>
                 </div>
-                <select id="sortSelect">
+                <select id="sortSelect" aria-label="Sort tasks">
                     <option value="default">Sort: Default</option>
                     <option value="priority">Sort: Priority</option>
                     <option value="dueDate">Sort: Due Date</option>
@@ -74,11 +76,14 @@
         </div>
     </div>
 
-   
-    <div class="page" id="statsPage" style="display:none;">
+    
+    <div class="page" id="statsPage" hidden>
         <div class="container">
-            <button id="backBtn" class="back-btn">← Back</button>
-            <h1>My Statistics</h1>
+            <header class="app-header">
+                <button type="button" id="backBtn" class="back-btn">← Back</button>
+                <h1>My Statistics</h1>
+                <span class="header-spacer" aria-hidden="true"></span>
+            </header>
             <div class="stats-grid">
                 <div class="stat-card">
                     <span class="stat-number" id="statTotal">0</span>
@@ -100,8 +105,8 @@
         </div>
     </div>
 
-    <div id="undoPopup">Task completed <button id="undoBtn">Undo</button></div>
-    <div id="appreciationPopup" style="display:none;">🏁 List cleared. Not everyone does that.</div>
+    <div id="undoPopup">Task completed <button type="button" id="undoBtn">Undo</button></div>
+    <div id="appreciationPopup" hidden>🏁 All tasks completed. Not everyone does that.</div>
 
     <script src="script.js"></script>
 </body>
